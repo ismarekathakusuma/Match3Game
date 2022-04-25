@@ -70,6 +70,16 @@ public class Tile : MonoBehaviour {
 			}
 			else
 			{
+				if (GetAllAdjacentTiles().Contains(previousSelected.gameObject))
+				{ // Call GetAllAdjacentTiles and check if the previousSelected game object is in the returned adjacent tiles list.
+					SwapSprite(previousSelected.render); // Swap the sprite of the tile
+					previousSelected.Deselect(); // // If it wasn't the first one that was selected, deselect all tiles
+				}
+				else
+				{ // The tile isn't next to the previously selected one, deselect the previous one and select the newly selected tile instead
+					previousSelected.GetComponent<Tile>().Deselect();
+					Select();
+				}
 				SwapSprite(previousSelected.render);
 				previousSelected.Deselect(); // If it wasn't the first one that was selected, deselect all tiles
 			}
@@ -89,6 +99,25 @@ public class Tile : MonoBehaviour {
 		SFXManager.instance.PlaySFX(Clip.Swap); // Swap out the first sprite by setting it to the second (which has been put into tempSprite
 	}
 
+	private GameObject GetAdjacent(Vector2 castDir)
+	{
+		RaycastHit2D hit = Physics2D.Raycast(transform.position, castDir);
+		if (hit.collider != null)
+		{
+			return hit.collider.gameObject;
+		}
+		return null;
+	}
+
+	private List<GameObject> GetAllAdjacentTiles()
+	{
+		List<GameObject> adjacentTiles = new List<GameObject>();
+		for (int i = 0; i < adjacentDirections.Length; i++)
+		{
+			adjacentTiles.Add(GetAdjacent(adjacentDirections[i]));
+		}
+		return adjacentTiles;
+	}
 
 
 }
