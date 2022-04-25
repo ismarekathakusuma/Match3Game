@@ -50,4 +50,45 @@ public class Tile : MonoBehaviour {
 		previousSelected = null;
 	}
 
+	void OnMouseDown()
+	{
+		// Make sure the game is permitting tile selections
+		if (render.sprite == null || BoardManager.instance.IsShifting)
+		{
+			return;
+		}
+
+		if (isSelected)
+		{ // Is it already selected?
+			Deselect();
+		}
+		else
+		{
+			if (previousSelected == null)
+			{ // Is it the first tile selected?
+				Select();
+			}
+			else
+			{
+				SwapSprite(previousSelected.render);
+				previousSelected.Deselect(); // If it wasn't the first one that was selected, deselect all tiles
+			}
+		}
+	}
+
+	public void SwapSprite(SpriteRenderer render2)
+	{ // Accept a SpriteRenderer called render2 as a parameter which will be used together with render to swap sprites.
+		if (render.sprite == render2.sprite)
+		{ // Check render2 against the SpriteRenderer of the current tile. If they are the same, do nothing, as swapping two identical sprites wouldn't make much sense.
+			return;
+		}
+
+		Sprite tempSprite = render2.sprite; // Create a tempSprite to hold the sprite of render2
+		render2.sprite = render.sprite; // Swap out the second sprite by setting it to the first
+		render.sprite = tempSprite; // Swap out the first sprite by setting it to the second (which has been put into tempSprite
+		SFXManager.instance.PlaySFX(Clip.Swap); // Swap out the first sprite by setting it to the second (which has been put into tempSprite
+	}
+
+
+
 }
