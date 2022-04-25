@@ -47,16 +47,31 @@ public class BoardManager : MonoBehaviour {
         float startX = transform.position.x;
 		float startY = transform.position.y;
 
+		Sprite[] previousLeft = new Sprite[ySize];
+		Sprite previousBelow = null;
+
 		for (int x = 0; x < xSize; x++) {
 			for (int y = 0; y < ySize; y++) {
+
 				GameObject newTile = Instantiate(tile, new Vector3(startX + (xOffset * x), startY + (yOffset * y), 0), tile.transform.rotation);
 				tiles[x, y] = newTile;
+
 				// Randomizing the Board
-				newTile.transform.parent = transform; // 1
-				Sprite newSprite = characters[Random.Range(0, characters.Count)]; // 2
-				newTile.GetComponent<SpriteRenderer>().sprite = newSprite; // 3
+				newTile.transform.parent = transform; // Parent all the tiles to your BoardManager to keep your Hierarchy clean in the editor.
+
+				List<Sprite> possibleCharacters = new List<Sprite>(); // Create a list of possible characters for this sprite.
+				possibleCharacters.AddRange(characters); // Add all characters to the list.
+
+				possibleCharacters.Remove(previousLeft[y]); // Remove the characters that are on the left and below the current sprite from the list of possible characters.
+				possibleCharacters.Remove(previousBelow);
+
+				Sprite newSprite = possibleCharacters[Random.Range(0, possibleCharacters.Count)]; // Randomly choose a sprite.
+				newTile.GetComponent<SpriteRenderer>().sprite = newSprite; // Set the newly created tile's sprite to the randomly chosen sprite.
+
+				previousLeft[y] = newSprite;
+				previousBelow = newSprite;
 			}
-        }
+		}
     }
 
 }
