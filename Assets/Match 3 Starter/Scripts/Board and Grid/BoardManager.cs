@@ -51,6 +51,10 @@ public class BoardManager : MonoBehaviour {
 			for (int y = 0; y < ySize; y++) {
 				GameObject newTile = Instantiate(tile, new Vector3(startX + (xOffset * x), startY + (yOffset * y), 0), tile.transform.rotation);
 				tiles[x, y] = newTile;
+				// Randomizing the Board
+				newTile.transform.parent = transform; // 1
+				Sprite newSprite = characters[Random.Range(0, characters.Count)]; // 2
+				newTile.GetComponent<SpriteRenderer>().sprite = newSprite; // 3
 			}
         }
     }
