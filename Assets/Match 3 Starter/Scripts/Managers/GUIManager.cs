@@ -35,8 +35,40 @@ public class GUIManager : MonoBehaviour {
 	public Text moveCounterTxt;
 
 	private int score;
+	private int moveCounter;
+
+	public int Score
+	{
+		get
+		{
+			return score;
+		}
+
+		set
+		{
+			score = value;
+			scoreTxt.text = score.ToString();
+		}
+	}
+
+	public int MoveCounter
+	{
+		get
+		{
+			return moveCounter;
+		}
+
+		set
+		{
+			moveCounter = value;
+			moveCounterTxt.text = moveCounter.ToString();
+		}
+	}
+
 
 	void Awake() {
+		moveCounter = 60;
+		moveCounterTxt.text = moveCounter.ToString();
 		instance = GetComponent<GUIManager>();
 	}
 
